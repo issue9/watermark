@@ -115,13 +115,12 @@ func (w *Watermark) MarkFile(path string) error {
 
 // Mark 将水印写入 src 中，由 ext 确定当前图片的类型。
 func (w *Watermark) Mark(src io.ReadWriteSeeker, ext string) (err error) {
-	if ext == ".gif" {
-		return w.markGIF(src)
-	}
-
 	var srcImg image.Image
 
+	ext = strings.ToLower(ext)
 	switch ext {
+	case ".gif":
+		return w.markGIF(src) // GIF 另外单独处理
 	case ".jpg", ".jpeg":
 		srcImg, err = jpeg.Decode(src)
 	case ".png":
@@ -148,7 +147,7 @@ func (w *Watermark) Mark(src io.ReadWriteSeeker, ext string) (err error) {
 	case ".png":
 		return png.Encode(src, dstImg)
 	default:
-		return nil
+		return ErrUnsupportedWatermarkType
 	}
 }
 

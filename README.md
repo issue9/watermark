@@ -1,7 +1,10 @@
 watermark [![Build Status](https://travis-ci.org/issue9/watermark.svg?branch=master)](https://travis-ci.org/issue9/watermark)
 ======
 
-处理上传文件，若是图片还可以设置水印。
+watermark 提供了简单的图片水印处理功能。支持处理 GIF、PNG 和 JPEG，水印也只支持这些类型的文件，
+若水印文件是一个 GIF，则只取 GIF 的第一帧与被渲染文件进行合并。
+
+
 ```go
 w, err := watermark.New("./path/to/watermark/file", 2, watermark.Center)
 if err != nil{
