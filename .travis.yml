@@ -1,0 +1,15 @@
+language: go
+
+os:
+  - linux
+  - osx
+
+go:
+  - tip
+  - "1.10"
+  - 1.9
+  - 1.8
+
+install:
+  - mkdir ./testdata/output
+  - go get github.com/issue9/assert
