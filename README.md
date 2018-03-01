@@ -1,8 +1,12 @@
 watermark [![Build Status](https://travis-ci.org/issue9/watermark.svg?branch=master)](https://travis-ci.org/issue9/watermark)
 ======
 
-watermark 提供了简单的图片水印处理功能。支持处理 GIF、PNG 和 JPEG，水印也只支持这些类型的文件，
-若水印文件是一个 GIF，则只取 GIF 的第一帧与被渲染文件进行合并。
+watermark 提供了简单的图片水印处理功能。支持处理 GIF、PNG 和 JPEG，水印也只支持这些类型的文件。
+
+对于 GIF 水印，若被渲染图片为非 GIF 图片，则只取水印的第一帧作为水印内容；
+若被渲染图片也是 GIF，则会将被渲染图片的第一帧与水印的第一帧合并，
+水印的第二帧与被渲染图片的第二帧合并，依次类推。水印帧数不够的，则循环使用，
+直到被渲染图片的帧数用完。
 
 
 ```go

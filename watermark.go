@@ -46,6 +46,7 @@ type Pos int
 // 若是 gif 图片，则只取图片的第一帧；png 支持透明背景。
 type Watermark struct {
 	image   image.Image // 水印图片
+	gifImg  *gif.GIF    // 如果是 GIF 图片，image 保存第一帧的图片， gifImg 保存全部内容
 	padding int         // 水印留的边白
 	pos     Pos         // 水印的位置
 }
@@ -63,13 +64,15 @@ func New(path string, padding int, pos Pos) (*Watermark, error) {
 	defer f.Close()
 
 	var img image.Image
+	var gifImg *gif.GIF
 	switch strings.ToLower(filepath.Ext(path)) {
 	case ".jpg", ".jpeg":
 		img, err = jpeg.Decode(f)
 	case ".png":
 		img, err = png.Decode(f)
 	case ".gif":
-		img, err = gif.Decode(f)
+		gifImg, err = gif.DecodeAll(f)
+		img = gifImg.Image[0]
 	default:
 		return nil, ErrUnsupportedWatermarkType
 	}
@@ -83,6 +86,7 @@ func New(path string, padding int, pos Pos) (*Watermark, error) {
 
 	return &Watermark{
 		image:   img,
+		gifImg:  gifImg,
 		padding: padding,
 		pos:     pos,
 	}, nil
@@ -159,11 +163,30 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 	bound := srcGIF.Image[0].Bounds()
 	point := w.getPoing(bound.Dx(), bound.Dy())
 
-	for index, img := range srcGIF.Image {
-		dstImg := image.NewPaletted(img.Bounds(), img.Palette)
-		draw.Draw(dstImg, dstImg.Bounds(), img, image.ZP, draw.Src)
-		draw.Draw(dstImg, dstImg.Bounds(), w.image, point, draw.Over)
-		srcGIF.Image[index] = dstImg
+	if w.gifImg == nil {
+		for index, img := range srcGIF.Image {
+			dstImg := image.NewPaletted(img.Bounds(), img.Palette)
+			draw.Draw(dstImg, dstImg.Bounds(), img, image.ZP, draw.Src)
+			draw.Draw(dstImg, dstImg.Bounds(), w.image, point, draw.Over)
+			srcGIF.Image[index] = dstImg
+		}
+	} else { // 水印也是 GIF
+		windex := 0
+		wmax := len(w.gifImg.Image)
+		for index, img := range srcGIF.Image {
+			dstImg := image.NewPaletted(img.Bounds(), img.Palette)
+			draw.Draw(dstImg, dstImg.Bounds(), img, image.ZP, draw.Src)
+
+			// 获取对应帧数的水印图片
+			if windex >= wmax {
+				windex = 0
+			}
+			image := w.gifImg.Image[windex]
+			windex++
+			draw.Draw(dstImg, dstImg.Bounds(), image, point, draw.Over)
+
+			srcGIF.Image[index] = dstImg
+		}
 	}
 
 	if _, err = src.Seek(0, 0); err != nil {
