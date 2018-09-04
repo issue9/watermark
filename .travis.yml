@@ -6,10 +6,13 @@ os:
 
 go:
   - tip
+  - 1.11
   - "1.10"
-  - 1.9
-  - 1.8
 
 install:
   - mkdir ./testdata/output
   - go get github.com/issue9/assert
+
+script: env GO111MODULE=on go test -race -v -coverprofile=coverage.txt -covermode=atomic $(go list ./...)
+
+after_success: bash <(curl -s https://codecov.io/bash)
