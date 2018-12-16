@@ -16,5 +16,3 @@
 testdata/output/
 *.swp
 .DS_Store
-
-go.sum
