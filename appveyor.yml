@@ -8,7 +8,7 @@ environment:
 stack: go 1.11
 
 install:
-  - cmd: mkdir ./testdata/output
+  - cmd: mkdir .\testdata\output
 
 before_test:
   - go vet ./...
