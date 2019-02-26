@@ -1,6 +1,5 @@
 watermark
 [![Build Status](https://travis-ci.org/issue9/watermark.svg?branch=master)](https://travis-ci.org/issue9/watermark)
-[![Build status](https://ci.appveyor.com/api/projects/status/rth04mgpw7pqg6dk?svg=true)](https://ci.appveyor.com/project/caixw/watermark)
 ======
 
 watermark 提供了简单的图片水印处理功能。支持处理 GIF、PNG 和 JPEG，水印也只支持这些类型的文件。
