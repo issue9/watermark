@@ -136,7 +136,7 @@ func (w *Watermark) Mark(src io.ReadWriteSeeker, ext string) (err error) {
 		return err
 	}
 
-	point := w.getPoing(srcImg.Bounds().Dx(), srcImg.Bounds().Dy())
+	point := w.getPoint(srcImg.Bounds().Dx(), srcImg.Bounds().Dy())
 	dstImg := image.NewNRGBA64(srcImg.Bounds())
 	draw.Draw(dstImg, dstImg.Bounds(), srcImg, image.ZP, draw.Src)
 	draw.Draw(dstImg, dstImg.Bounds(), w.image, point, draw.Over)
@@ -161,7 +161,7 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 		return err
 	}
 	bound := srcGIF.Image[0].Bounds()
-	point := w.getPoing(bound.Dx(), bound.Dy())
+	point := w.getPoint(bound.Dx(), bound.Dy())
 
 	if w.gifImg == nil {
 		for index, img := range srcGIF.Image {
@@ -195,7 +195,7 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 	return gif.EncodeAll(src, srcGIF)
 }
 
-func (w *Watermark) getPoing(width, height int) image.Point {
+func (w *Watermark) getPoint(width, height int) image.Point {
 	var point image.Point
 
 	switch w.pos {
