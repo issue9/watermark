@@ -49,8 +49,9 @@ func TestNew(t *testing.T) {
 	w, err := New("./testdata/watermark.unsupported", 10, TopLeft)
 	a.Equal(err, ErrUnsupportedWatermarkType).Nil(w)
 
-	w, err = New("./testdata/watermark.png", 10, -1)
-	a.Equal(err, ErrInvalidPos).Nil(w)
+	a.Panic(func() {
+		w, err = New("./testdata/watermark.png", 10, -1)
+	})
 
 	src := "./testdata/background.unsupported"
 	dest := "./testdata/output/unsupported.unsupported"

@@ -30,7 +30,7 @@ const (
 // 错误类型
 var (
 	ErrUnsupportedWatermarkType = errors.New("不支持的水印类型")
-	ErrInvalidPos               = errors.New("无效的 pos 值")
+	errInvalidPos               = errors.New("无效的 pos 值")
 )
 
 // 允许做水印的图片类型
@@ -57,6 +57,10 @@ type Watermark struct {
 // padding 为水印在目标图像上的留白大小；
 // pos 水印的位置。
 func New(path string, padding int, pos Pos) (*Watermark, error) {
+	if pos < TopLeft || pos > Center {
+		panic(errInvalidPos)
+	}
+
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -78,10 +82,6 @@ func New(path string, padding int, pos Pos) (*Watermark, error) {
 	}
 	if err != nil {
 		return nil, err
-	}
-
-	if pos < TopLeft || pos > Center {
-		return nil, ErrInvalidPos
 	}
 
 	return &Watermark{
@@ -222,7 +222,7 @@ func (w *Watermark) getPoint(width, height int) image.Point {
 			Y: -(height - w.padding - w.image.Bounds().Dy()) / 2,
 		}
 	default:
-		panic(ErrInvalidPos)
+		panic(errInvalidPos)
 	}
 
 	return point
