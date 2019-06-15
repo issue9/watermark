@@ -27,11 +27,8 @@ const (
 	Center
 )
 
-// 错误类型
-var (
-	ErrUnsupportedWatermarkType = errors.New("不支持的水印类型")
-	errInvalidPos               = errors.New("无效的 pos 值")
-)
+// ErrUnsupportedWatermarkType 不支持的水印类型
+var ErrUnsupportedWatermarkType = errors.New("不支持的水印类型")
 
 // 允许做水印的图片类型
 var allowExts = []string{
@@ -58,7 +55,7 @@ type Watermark struct {
 // pos 水印的位置。
 func New(path string, padding int, pos Pos) (*Watermark, error) {
 	if pos < TopLeft || pos > Center {
-		panic(errInvalidPos)
+		panic("无效的 pos 值")
 	}
 
 	f, err := os.Open(path)
@@ -96,6 +93,14 @@ func New(path string, padding int, pos Pos) (*Watermark, error) {
 //
 // ext 必须带上 . 符号
 func IsAllowExt(ext string) bool {
+	if ext == "" {
+		panic("参数 ext 不能为空")
+	}
+
+	if ext[0] != '.' {
+		panic("参数 ext 必须以 . 开头")
+	}
+
 	ext = strings.ToLower(ext)
 
 	for _, e := range allowExts {
@@ -222,7 +227,7 @@ func (w *Watermark) getPoint(width, height int) image.Point {
 			Y: -(height - w.padding - w.image.Bounds().Dy()) / 2,
 		}
 	default:
-		panic(errInvalidPos)
+		panic("无效的 pos 值")
 	}
 
 	return point

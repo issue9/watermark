@@ -86,5 +86,7 @@ func TestIsAllowExt(t *testing.T) {
 	a.True(IsAllowExt(".JPeG"))
 	a.True(IsAllowExt(".png"))
 	a.True(IsAllowExt(".Gif"))
-	a.False(IsAllowExt("gif"))
+
+	a.Panic(func() { IsAllowExt("") })
+	a.Panic(func() { IsAllowExt("gif") })
 }
