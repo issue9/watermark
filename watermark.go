@@ -29,7 +29,7 @@ var (
 	// ErrUnsupportedWatermarkType 不支持的水印类型
 	ErrUnsupportedWatermarkType = errors.New("不支持的水印类型")
 
-	// ErrWatermarkTooLarge 水印太大
+	// ErrWatermarkTooLarge 当水印位置距离右下角的范围小于水印图片时，返回错误。
 	ErrWatermarkTooLarge = errors.New("水印太大")
 )
 
@@ -144,7 +144,13 @@ func (w *Watermark) Mark(src io.ReadWriteSeeker, ext string) (err error) {
 		return err
 	}
 
-	point := w.getPoint(srcImg.Bounds().Dx(), srcImg.Bounds().Dy())
+	bound := srcImg.Bounds()
+	point := w.getPoint(bound.Dx(), bound.Dy())
+
+	if err = w.checkTooLarge(point, bound); err != nil {
+		return err
+	}
+
 	dstImg := image.NewNRGBA64(srcImg.Bounds())
 	draw.Draw(dstImg, dstImg.Bounds(), srcImg, image.ZP, draw.Src)
 	draw.Draw(dstImg, dstImg.Bounds(), w.image, point, draw.Over)
@@ -170,6 +176,10 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 	}
 	bound := srcGIF.Image[0].Bounds()
 	point := w.getPoint(bound.Dx(), bound.Dy())
+
+	if err = w.checkTooLarge(point, bound); err != nil {
+		return err
+	}
 
 	if w.gifImg == nil {
 		for index, img := range srcGIF.Image {
@@ -201,6 +211,17 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 		return err
 	}
 	return gif.EncodeAll(src, srcGIF)
+}
+
+func (w *Watermark) checkTooLarge(start image.Point, dst image.Rectangle) error {
+	// 允许的最大高宽
+	width := dst.Dx() - start.X - w.padding
+	height := dst.Dy() - start.Y - w.padding
+
+	if width < w.image.Bounds().Dx() || height < w.image.Bounds().Dy() {
+		return ErrWatermarkTooLarge
+	}
+	return nil
 }
 
 func (w *Watermark) getPoint(width, height int) image.Point {

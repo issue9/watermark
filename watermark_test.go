@@ -3,6 +3,7 @@
 package watermark
 
 import (
+	"image"
 	"io"
 	"os"
 	"testing"
@@ -87,4 +88,18 @@ func TestIsAllowExt(t *testing.T) {
 
 	a.Panic(func() { IsAllowExt("") })
 	a.Panic(func() { IsAllowExt("gif") })
+}
+
+func TestWater_checkTooLarge(t *testing.T) {
+	a := assert.New(t)
+
+	w, err := New("./testdata/watermark.png", 10, BottomRight)
+	a.NotError(err).NotNil(w)
+	dst := image.Rect(0, 0, w.image.Bounds().Dx(), w.image.Bounds().Dy())
+	a.Equal(w.checkTooLarge(image.Point{X: 0, Y: 0}, dst), ErrWatermarkTooLarge)
+
+	// padding 为 0 正好 1：1 覆盖
+	w.padding = 0
+	dst = image.Rect(0, 0, w.image.Bounds().Dx(), w.image.Bounds().Dy())
+	a.NotError(w.checkTooLarge(image.Point{X: 0, Y: 0}, dst))
 }
