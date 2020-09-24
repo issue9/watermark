@@ -25,8 +25,13 @@ const (
 	Center
 )
 
-// ErrUnsupportedWatermarkType 不支持的水印类型
-var ErrUnsupportedWatermarkType = errors.New("不支持的水印类型")
+var (
+	// ErrUnsupportedWatermarkType 不支持的水印类型
+	ErrUnsupportedWatermarkType = errors.New("不支持的水印类型")
+
+	// ErrWatermarkTooLarge 水印太大
+	ErrWatermarkTooLarge = errors.New("水印太大")
+)
 
 // 允许做水印的图片类型
 var allowExts = []string{
