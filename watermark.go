@@ -11,6 +11,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -58,25 +59,40 @@ type Watermark struct {
 // padding 为水印在目标图像上的留白大小；
 // pos 水印的位置。
 func New(path string, padding int, pos Pos) (*Watermark, error) {
-	if pos < TopLeft || pos > Center {
-		panic("无效的 pos 值")
-	}
-
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
+	return newWatermark(f, filepath.Ext(path), padding, pos)
+}
+
+// NewFS 从文件系统初始化 Watermark 对象
+func NewFS(fsys fs.FS, path string, padding int, pos Pos) (*Watermark, error) {
+	f, err := fsys.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	return newWatermark(f, filepath.Ext(path), padding, pos)
+}
+
+func newWatermark(r io.Reader, ext string, padding int, pos Pos) (w *Watermark, err error) {
+	if pos < TopLeft || pos > Center {
+		panic("无效的 pos 值")
+	}
+
 	var img image.Image
 	var gifImg *gif.GIF
-	switch strings.ToLower(filepath.Ext(path)) {
+	switch strings.ToLower(ext) {
 	case ".jpg", ".jpeg":
-		img, err = jpeg.Decode(f)
+		img, err = jpeg.Decode(r)
 	case ".png":
-		img, err = png.Decode(f)
+		img, err = png.Decode(r)
 	case ".gif":
-		gifImg, err = gif.DecodeAll(f)
+		gifImg, err = gif.DecodeAll(r)
 		img = gifImg.Image[0]
 	default:
 		return nil, ErrUnsupportedWatermarkType
