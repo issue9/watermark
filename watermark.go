@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-// Package watermark 提供一个简单的水印功能。
+// Package watermark 提供一个简单的水印功能
 package watermark
 
 import (
@@ -41,7 +41,8 @@ var allowExts = []string{
 // Pos 表示水印的位置
 type Pos int
 
-// Watermark 用于给图片添加水印功能。
+// Watermark 用于给图片添加水印功能
+//
 // 目前支持 gif、jpeg 和 png 三种图片格式。
 // 若是 gif 图片，则只取图片的第一帧；png 支持透明背景。
 type Watermark struct {
@@ -51,7 +52,7 @@ type Watermark struct {
 	pos     Pos         // 水印的位置
 }
 
-// New 声明一个 Watermark 对象。
+// New 声明一个 Watermark 对象
 //
 // path 为水印文件的路径；
 // padding 为水印在目标图像上的留白大小；
@@ -152,7 +153,7 @@ func (w *Watermark) Mark(src io.ReadWriteSeeker, ext string) (err error) {
 	}
 
 	dstImg := image.NewNRGBA64(srcImg.Bounds())
-	draw.Draw(dstImg, dstImg.Bounds(), srcImg, image.ZP, draw.Src)
+	draw.Draw(dstImg, dstImg.Bounds(), srcImg, image.Point{}, draw.Src)
 	draw.Draw(dstImg, dstImg.Bounds(), w.image, point, draw.Over)
 
 	if _, err = src.Seek(0, 0); err != nil {
@@ -184,7 +185,7 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 	if w.gifImg == nil {
 		for index, img := range srcGIF.Image {
 			dstImg := image.NewPaletted(img.Bounds(), img.Palette)
-			draw.Draw(dstImg, dstImg.Bounds(), img, image.ZP, draw.Src)
+			draw.Draw(dstImg, dstImg.Bounds(), img, image.Point{}, draw.Src)
 			draw.Draw(dstImg, dstImg.Bounds(), w.image, point, draw.Over)
 			srcGIF.Image[index] = dstImg
 		}
@@ -193,7 +194,7 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 		wmax := len(w.gifImg.Image)
 		for index, img := range srcGIF.Image {
 			dstImg := image.NewPaletted(img.Bounds(), img.Palette)
-			draw.Draw(dstImg, dstImg.Bounds(), img, image.ZP, draw.Src)
+			draw.Draw(dstImg, dstImg.Bounds(), img, image.Point{}, draw.Src)
 
 			// 获取对应帧数的水印图片
 			if windex >= wmax {
