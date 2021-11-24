@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/issue9/assert"
+	"github.com/issue9/assert/v2"
 )
 
 // 复制文件到 output 目录下，并重命名。
@@ -43,7 +43,7 @@ func output(a *assert.Assertion, pos Pos, bgExt, waterExt string) {
 }
 
 func TestNew(t *testing.T) {
-	a := assert.New(t)
+	a := assert.New(t, false)
 
 	w, err := New("./testdata/watermark.unsupported", 10, TopLeft)
 	a.Equal(err, ErrUnsupportedWatermarkType).Nil(w)
@@ -63,7 +63,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestWatermark_MarkFile(t *testing.T) {
-	a := assert.New(t)
+	a := assert.New(t, false)
 
 	output(a, TopLeft, ".jpg", ".jpg")
 	output(a, TopRight, ".jpg", ".png")
@@ -79,7 +79,7 @@ func TestWatermark_MarkFile(t *testing.T) {
 }
 
 func TestIsAllowExt(t *testing.T) {
-	a := assert.New(t)
+	a := assert.New(t, false)
 
 	a.True(IsAllowExt(".jpg"))
 	a.True(IsAllowExt(".JPeG"))
@@ -91,7 +91,7 @@ func TestIsAllowExt(t *testing.T) {
 }
 
 func TestWater_checkTooLarge(t *testing.T) {
-	a := assert.New(t)
+	a := assert.New(t, false)
 
 	w, err := New("./testdata/watermark.png", 10, BottomRight)
 	a.NotError(err).NotNil(w)
