@@ -15,7 +15,7 @@ func BenchmarkWater_MakeImage_500xJPEG(b *testing.B) {
 
 	copyBackgroundFile(a, "./testdata/output/bench.jpg", "./testdata/background.jpg")
 
-	w, err := New("./testdata/watermark.jpg", 10, TopLeft)
+	w, err := NewFromFile("./testdata/watermark.jpg", 10, TopLeft)
 	a.NotError(err).NotNil(w)
 
 	file, err := os.OpenFile("./testdata/output/bench.jpg", os.O_RDWR, os.ModePerm)
@@ -33,7 +33,7 @@ func BenchmarkWater_MakeImage_500xPNG(b *testing.B) {
 
 	copyBackgroundFile(a, "./testdata/output/bench.png", "./testdata/background.png")
 
-	w, err := New("./testdata/watermark.png", 10, TopLeft)
+	w, err := NewFromFile("./testdata/watermark.png", 10, TopLeft)
 	a.NotError(err).NotNil(w)
 
 	file, err := os.OpenFile("./testdata/output/bench.png", os.O_RDWR, os.ModePerm)
@@ -51,7 +51,7 @@ func BenchmarkWater_MakeImage_500xGIF(b *testing.B) {
 
 	copyBackgroundFile(a, "./testdata/output/bench.gif", "./testdata/background.gif")
 
-	w, err := New("./testdata/watermark.gif", 10, TopLeft)
+	w, err := NewFromFile("./testdata/watermark.gif", 10, TopLeft)
 	a.NotError(err).NotNil(w)
 
 	file, err := os.OpenFile("./testdata/output/bench.gif", os.O_RDWR, os.ModePerm)

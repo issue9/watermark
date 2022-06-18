@@ -53,33 +53,39 @@ type Watermark struct {
 	pos     Pos         // 水印的位置
 }
 
-// New 声明一个 Watermark 对象
+// NewFromFile 从文件声明一个 Watermark 对象
 //
 // path 为水印文件的路径；
 // padding 为水印在目标图像上的留白大小；
 // pos 水印的位置。
-func New(path string, padding int, pos Pos) (*Watermark, error) {
+func NewFromFile(path string, padding int, pos Pos) (*Watermark, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	return newWatermark(f, filepath.Ext(path), padding, pos)
+	return New(f, filepath.Ext(path), padding, pos)
 }
 
-// NewFS 从文件系统初始化 Watermark 对象
-func NewFS(fsys fs.FS, path string, padding int, pos Pos) (*Watermark, error) {
+// NewFromFS 从文件系统初始化 Watermark 对象
+func NewFromFS(fsys fs.FS, path string, padding int, pos Pos) (*Watermark, error) {
 	f, err := fsys.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	return newWatermark(f, filepath.Ext(path), padding, pos)
+	return New(f, filepath.Ext(path), padding, pos)
 }
 
-func newWatermark(r io.Reader, ext string, padding int, pos Pos) (w *Watermark, err error) {
+// New 声明 Watermark 对象
+//
+// r 为水印图片内容；
+// ext 为水印图片的扩展名，会根据扩展名判断图片类型；
+// padding 为水印在目标图像上的留白大小；
+// pos 图片位置；
+func New(r io.Reader, ext string, padding int, pos Pos) (w *Watermark, err error) {
 	if pos < TopLeft || pos > Center {
 		panic("无效的 pos 值")
 	}

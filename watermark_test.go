@@ -37,26 +37,26 @@ func output(a *assert.Assertion, pos Pos, bgExt, waterExt string) {
 	copyBackgroundFile(a, dest, src)
 
 	// 添加水印
-	w, err := New(water, 10, pos)
+	w, err := NewFromFile(water, 10, pos)
 	a.NotError(err).NotNil(w)
 	a.NotError(w.MarkFile(dest))
 }
 
-func TestNew(t *testing.T) {
+func TestNewFromFile(t *testing.T) {
 	a := assert.New(t, false)
 
-	w, err := New("./testdata/watermark.unsupported", 10, TopLeft)
+	w, err := NewFromFile("./testdata/watermark.unsupported", 10, TopLeft)
 	a.Equal(err, ErrUnsupportedWatermarkType).Nil(w)
 
 	a.Panic(func() {
-		w, err = New("./testdata/watermark.png", 10, -1)
+		w, err = NewFromFile("./testdata/watermark.png", 10, -1)
 	})
 
 	src := "./testdata/background.unsupported"
 	dest := "./testdata/output/unsupported.unsupported"
 	copyBackgroundFile(a, dest, src)
 
-	w, err = New("./testdata/watermark.png", 10, TopLeft)
+	w, err = NewFromFile("./testdata/watermark.png", 10, TopLeft)
 	a.NotError(err).NotNil(w)
 	err = w.MarkFile(dest)
 	a.Equal(err, ErrUnsupportedWatermarkType)
@@ -93,7 +93,7 @@ func TestIsAllowExt(t *testing.T) {
 func TestWater_checkTooLarge(t *testing.T) {
 	a := assert.New(t, false)
 
-	w, err := New("./testdata/watermark.png", 10, BottomRight)
+	w, err := NewFromFile("./testdata/watermark.png", 10, BottomRight)
 	a.NotError(err).NotNil(w)
 	dst := image.Rect(0, 0, w.image.Bounds().Dx(), w.image.Bounds().Dy())
 	a.Equal(w.checkTooLarge(image.Point{X: 0, Y: 0}, dst), ErrWatermarkTooLarge)
