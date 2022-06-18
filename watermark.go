@@ -216,9 +216,8 @@ func (w *Watermark) markGIF(src io.ReadWriteSeeker) error {
 			if windex >= wmax {
 				windex = 0
 			}
-			image := w.gifImg.Image[windex]
+			draw.Draw(dstImg, dstImg.Bounds(), w.gifImg.Image[windex], point, draw.Over)
 			windex++
-			draw.Draw(dstImg, dstImg.Bounds(), image, point, draw.Over)
 
 			srcGIF.Image[index] = dstImg
 		}
