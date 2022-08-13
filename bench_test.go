@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/issue9/assert/v2"
+	"github.com/issue9/assert/v3"
 )
 
 // go1.10 BenchmarkWater_MakeImage_500xJPEG-4   	  200000	      5689 ns/op

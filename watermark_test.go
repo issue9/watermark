@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/issue9/assert/v2"
+	"github.com/issue9/assert/v3"
 )
 
 // 复制文件到 output 目录下，并重命名。
