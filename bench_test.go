@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2018-2024 caixw
+//
 // SPDX-License-Identifier: MIT
 
 package watermark
@@ -6,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/issue9/assert/v3"
+	"github.com/issue9/assert/v4"
 )
 
 // go1.10 BenchmarkWater_MakeImage_500xJPEG-4   	  200000	      5689 ns/op
