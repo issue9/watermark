@@ -11,7 +11,6 @@ import (
 	"github.com/issue9/assert/v4"
 )
 
-// go1.10 BenchmarkWater_MakeImage_500xJPEG-4   	  200000	      5689 ns/op
 func BenchmarkWater_MakeImage_500xJPEG(b *testing.B) {
 	a := assert.New(b, false)
 
@@ -29,7 +28,6 @@ func BenchmarkWater_MakeImage_500xJPEG(b *testing.B) {
 	}
 }
 
-// go1.10 BenchmarkWater_MakeImage_500xPNG-4    	  300000	      3540 ns/op
 func BenchmarkWater_MakeImage_500xPNG(b *testing.B) {
 	a := assert.New(b, false)
 
@@ -47,7 +45,6 @@ func BenchmarkWater_MakeImage_500xPNG(b *testing.B) {
 	}
 }
 
-// go1.10 BenchmarkWater_MakeImage_500xGIF-4    	  200000	      7020 ns/op
 func BenchmarkWater_MakeImage_500xGIF(b *testing.B) {
 	a := assert.New(b, false)
 

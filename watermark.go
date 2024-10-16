@@ -55,7 +55,7 @@ type Watermark struct {
 	pos     Pos         // 水印的位置
 }
 
-// NewFromFile 从文件声明一个 Watermark 对象
+// NewFromFile 从文件声明一个 [Watermark] 对象
 //
 // path 为水印文件的路径；
 // padding 为水印在目标图像上的留白大小；
@@ -70,7 +70,7 @@ func NewFromFile(path string, padding int, pos Pos) (*Watermark, error) {
 	return New(f, filepath.Ext(path), padding, pos)
 }
 
-// NewFromFS 从文件系统初始化 Watermark 对象
+// NewFromFS 从文件系统初始化 [Watermark] 对象
 func NewFromFS(fsys fs.FS, path string, padding int, pos Pos) (*Watermark, error) {
 	f, err := fsys.Open(path)
 	if err != nil {
@@ -81,7 +81,7 @@ func NewFromFS(fsys fs.FS, path string, padding int, pos Pos) (*Watermark, error
 	return New(f, filepath.Ext(path), padding, pos)
 }
 
-// New 声明 Watermark 对象
+// New 声明 [Watermark] 对象
 //
 // r 为水印图片内容；
 // ext 为水印图片的扩展名，会根据扩展名判断图片类型；
