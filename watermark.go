@@ -16,6 +16,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -54,6 +55,9 @@ type Watermark struct {
 	padding int         // 水印留的边白
 	pos     Pos         // 水印的位置
 }
+
+// AllowExts 当前包支持的所有文件类型
+func AllowExts() []string { return slices.Clone(allowExts) }
 
 // NewFromFile 从文件声明一个 [Watermark] 对象
 //
