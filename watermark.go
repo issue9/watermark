@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018-2024 caixw
+// SPDX-FileCopyrightText: 2018-2026 caixw
 //
 // SPDX-License-Identifier: MIT
 
@@ -133,14 +133,7 @@ func IsAllowExt(ext string) bool {
 		panic("参数 ext 必须以 . 开头")
 	}
 
-	ext = strings.ToLower(ext)
-
-	for _, e := range allowExts {
-		if e == ext {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(allowExts, strings.ToLower(ext))
 }
 
 // MarkFile 给指定的文件打上水印

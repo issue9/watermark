@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018-2024 caixw
+// SPDX-FileCopyrightText: 2018-2026 caixw
 //
 // SPDX-License-Identifier: MIT
 
@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/issue9/assert/v4"
+	"github.com/issue9/assert/v5"
 )
 
 func BenchmarkWater_MakeImage_500xJPEG(b *testing.B) {
@@ -23,7 +23,7 @@ func BenchmarkWater_MakeImage_500xJPEG(b *testing.B) {
 	a.NotError(err).NotNil(file)
 	defer file.Close()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		w.Mark(file, ".jpg")
 	}
 }
@@ -40,7 +40,7 @@ func BenchmarkWater_MakeImage_500xPNG(b *testing.B) {
 	a.NotError(err).NotNil(file)
 	defer file.Close()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		w.Mark(file, ".png")
 	}
 }
@@ -57,7 +57,7 @@ func BenchmarkWater_MakeImage_500xGIF(b *testing.B) {
 	a.NotError(err).NotNil(file)
 	defer file.Close()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		w.Mark(file, ".gif")
 	}
 }
